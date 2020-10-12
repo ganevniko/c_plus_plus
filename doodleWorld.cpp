@@ -246,13 +246,13 @@ public:
     void move();
     void starve();
 private:
-    int stepsAlive;
+    int stepsStarving;
     char appearance;
 };
 
 doodleBug::doodleBug(int row, int column):organism(row,column){
     appearance = doodleBugsAppearance;
-    stepsAlive =0;
+    stepsStarving =0;
 }
 void doodleBug:: breed(){
 
@@ -324,7 +324,7 @@ int main(){
     char next='y';
     int tempRow=0, tempColumn=0, sizeCheck;
     vector<ant> antsArray, tempAntsArray;
-    vector<doodleBug> doodleBugsArray;
+    vector<doodleBug> doodleBugsArray, tempDoodleBugArray;
 
 
     //Initializing world
@@ -360,15 +360,17 @@ int main(){
     cout<<" Are you ready to take the first step? if yes enter 'y'."<<endl;
     cin>>next;
     while (next == 'y') {
+        // Doodlebugs taking a step
         for (int i=0; i<doodleBugsArray.size();i++) {
             doodleBugsArray[i].move();
             doodleBugsArray[i].lookAround();
         }
+        //Ants taking a step
         for (int i=0; i<antsArray.size();i++) {
             antsArray[i].move();
             antsArray[i].lookAround();
         }
-
+        // updating vector of surviving and new ants
         for (int i=0; i<antsArray.size();i++){
             if (antsArray[i].lifeCheck())
                 tempAntsArray.push_back(antsArray[i]);
@@ -377,6 +379,14 @@ int main(){
         antsArray=tempAntsArray;
         tempAntsArray.clear();
         cout<<" erased "<<sizeCheck<<" ants."<<endl;
+        
+        // updating vector of surviving and new bugs
+        for (int i=0; i<doodleBugsArray.size();i++){
+            if (doodleBugsArray[i].lifeCheck())
+                tempDoodleBugArray.push_back(doodleBugsArray[i]);
+        }
+        doodleBugsArray=tempDoodleBugArray;
+        tempDoodleBugArray.clear();
 
 
 
@@ -385,7 +395,7 @@ int main(){
         cin>>next;
 
     }
-    
+
 
     return 0;
 }
