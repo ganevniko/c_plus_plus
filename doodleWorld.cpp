@@ -5,7 +5,7 @@
 
 using namespace std;
 const int worldSize =5;
-const int initialNumberOfAnts = 4;
+const int initialNumberOfAnts = 3;
 const int initialNumberOfDoodleBugs = 2;
 const char antsAppearance = 'o';
 const char doodleBugsAppearance = 'X';
@@ -190,8 +190,10 @@ void ant:: move(){
     char decision='n';
     int randomizing;
     this->lookAround();
-    if (doodleWorld[getRow()][getColumn()]==doodleBugsAppearance)
+    if (doodleWorld[getRow()][getColumn()]==doodleBugsAppearance ) {
         kill();
+        cout<<"killed ant on row "<<getRow()<<" and column "<<getColumn()<<endl;
+    }
     else{
         if (getRight() == emptySpaceAppearance)
             whatsAvailable.push_back('r');
@@ -361,7 +363,12 @@ int main(){
         for (int i=0; i<antsArray.size();i++) {
             antsArray[i].move();
             antsArray[i].lookAround();
+            if (antsArray[i].lifeCheck() == false)
+                antsArray.erase(antsArray.begin()+i-1);
         }
+        cout<<"The surviving ants are "<<endl;
+        for (int i=0; i<antsArray.size();i++)
+            cout<<i<<" - in row "<<antsArray[i].getRow()<<" and column "<<antsArray[i].getColumn()<<endl;
 
         displayWorld(doodleWorld);
         cout << "To move one step further press y" << endl;
