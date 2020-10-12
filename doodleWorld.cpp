@@ -376,10 +376,6 @@ int main(){
 
     }
 
-    cout<<"right --> "<<antsArray[1].getRight()<<endl;
-    cout<<"left --> "<<antsArray[1].getLeft()<<endl;
-    cout<<"up --> "<<antsArray[1].getUp()<<endl;
-    cout<<"down --> "<<antsArray[1].getDown()<<endl;
 
     return 0;
 }
