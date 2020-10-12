@@ -379,20 +379,13 @@ int main(){
         cout<<" erased "<<sizeCheck<<" ants."<<endl;
 
 
-        //cout<<"The surviving ants are "<<endl;
-        //for (int i=0; i<antsArray.size();i++)
-         //   cout<<i<<" - in row "<<antsArray[i].getRow()<<" and column "<<antsArray[i].getColumn()<<endl;
 
         displayWorld(doodleWorld);
         cout << "To move one step further press y" << endl;
         cin>>next;
 
     }
-
-    cout<<"right --> "<<antsArray[1].getRight()<<endl;
-    cout<<"left --> "<<antsArray[1].getLeft()<<endl;
-    cout<<"up --> "<<antsArray[1].getUp()<<endl;
-    cout<<"down --> "<<antsArray[1].getDown()<<endl;
+    
 
     return 0;
 }
