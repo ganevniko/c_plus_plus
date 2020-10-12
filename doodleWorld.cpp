@@ -5,12 +5,12 @@
 
 using namespace std;
 const int worldSize =8;
-const int initialNumberOfAnts = 30;
-const int initialNumberOfDoodleBugs = 5;
+const int initialNumberOfAnts = 1;
+const int initialNumberOfDoodleBugs = 4;
 const char antsAppearance = 'o';
 const char doodleBugsAppearance = 'X';
 const char emptySpaceAppearance = '-';
-const char directions[4]={'l','r','u','d'};
+const int doodleBugStepsToStarvation = 3;
 char doodleWorld[worldSize][worldSize];
 
 
@@ -324,8 +324,13 @@ void doodleBug::move(){
             doodleWorld[getRow()][getColumn()] = doodleBugsAppearance;
         }
     }
-    if (starving == true)
+    if (starving)
         this->setStarving(getStarving()+1);
+    if (this-> getStarving() >= doodleBugStepsToStarvation) {
+        kill();
+        doodleWorld[this->getRow()][this->getColumn()] = emptySpaceAppearance;
+        cout<<"Killed"<<endl;
+    }
 
 }
 
