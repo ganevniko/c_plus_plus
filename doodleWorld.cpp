@@ -363,8 +363,14 @@ int main(){
         for (int i=0; i<antsArray.size();i++) {
             antsArray[i].move();
             antsArray[i].lookAround();
-            if (antsArray[i].lifeCheck() == false)
-                antsArray.erase(antsArray.begin()+i-1);
+
+        }
+
+        for (int i=0; i<antsArray.size();i++) {
+            if (antsArray[i].lifeCheck() == false) {
+                cout << "erasing ant at row " << antsArray[i].getRow() << " and column " << antsArray[i].getColumn()<< endl;
+                antsArray.erase(antsArray.begin() + i );
+            }
         }
         cout<<"The surviving ants are "<<endl;
         for (int i=0; i<antsArray.size();i++)
@@ -376,6 +382,10 @@ int main(){
 
     }
 
+    cout<<"right --> "<<antsArray[1].getRight()<<endl;
+    cout<<"left --> "<<antsArray[1].getLeft()<<endl;
+    cout<<"up --> "<<antsArray[1].getUp()<<endl;
+    cout<<"down --> "<<antsArray[1].getDown()<<endl;
 
     return 0;
 }
