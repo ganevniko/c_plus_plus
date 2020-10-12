@@ -17,16 +17,16 @@ char doodleWorld[worldSize][worldSize];
 class organism {
 public:
     organism(int row, int column);
-    int getRow();
-    int getColumn();
+    int getRow() const;
+    int getColumn() const;
     void setRow(int a);
     void setColumn(int a);
-    bool lifeCheck();
+    bool lifeCheck() const;
     void kill();
-    char getLeft();
-    char getRight();
-    char getUp();
-    char getDown();
+    char getLeft() const;
+    char getRight() const;
+    char getUp() const;
+    char getDown() const;
     void setLeft(char l);
     void setRight(char r);
     void setUp(char u);
@@ -74,10 +74,10 @@ organism :: organism(int row, int column){
 
 }
 
-int organism :: getRow() {
+int organism :: getRow() const {
     return this->positionRow;
 }
-int organism :: getColumn() {
+int organism :: getColumn() const{
     return positionColumn;
 }
 
@@ -90,7 +90,7 @@ void organism::setColumn(int a){
 }
 
 
-bool organism :: lifeCheck() {
+bool organism :: lifeCheck() const {
     return isAlive;
 }
 
@@ -98,17 +98,17 @@ void organism:: kill() {
     isAlive = false;
 }
 
-char organism:: getLeft(){
+char organism:: getLeft() const{
     return left;
 }
 
-char organism:: getRight(){
+char organism:: getRight() const{
     return right;
 }
-char organism:: getUp(){
+char organism:: getUp() const{
     return up;
 }
-char organism:: getDown(){
+char organism:: getDown() const{
     return down;
 }
 
@@ -168,7 +168,7 @@ void organism::lookAround(){
     updateUp();
 }
 
-// //////////////////////////////////////////////////////////////////////////////////////////////////
+/*//////////////////////////////////////////////////////////////////////////////////////////////////*/
 
 class ant : public organism {
 public:
@@ -244,7 +244,8 @@ public:
     doodleBug(int row, int column);
     void breed();
     void move();
-    void starve();
+    int getStarving() const;
+    void setStarving(int a);
 private:
     int stepsStarving;
     char appearance;
@@ -257,26 +258,35 @@ doodleBug::doodleBug(int row, int column):organism(row,column){
 void doodleBug:: breed(){
 
 }
-void doodleBug:: starve(){
 
+int doodleBug::getStarving() const{
+    return this->stepsStarving;
+}
+void doodleBug::setStarving(int a){
+    this->stepsStarving = this->stepsStarving+1;
 }
 void doodleBug::move(){
     srand(time(0));
+    bool starving = true;
     vector<char> whatsAvailable;
     char decision='n';
     int randomizing;
     this->lookAround();
     if (getRight()==antsAppearance) {
         decision = 'r';
+        starving = false;
     }
     else if (getLeft()==antsAppearance) {
         decision = 'l';
+        starving = false;
     }
     else if (getUp()==antsAppearance) {
         decision = 'u';
+        starving = false;
     }
     else if (getDown()==antsAppearance) {
         decision = 'd';
+        starving = false;
     }
 
     if (decision!= 'r' && decision!= 'd' && decision!= 'u' && decision!= 'l' ) {
@@ -314,6 +324,8 @@ void doodleBug::move(){
             doodleWorld[getRow()][getColumn()] = doodleBugsAppearance;
         }
     }
+    if (starving == true)
+        this->setStarving(getStarving()+1);
 
 }
 
@@ -379,7 +391,7 @@ int main(){
         antsArray=tempAntsArray;
         tempAntsArray.clear();
         cout<<" erased "<<sizeCheck<<" ants."<<endl;
-        
+
         // updating vector of surviving and new bugs
         for (int i=0; i<doodleBugsArray.size();i++){
             if (doodleBugsArray[i].lifeCheck())
