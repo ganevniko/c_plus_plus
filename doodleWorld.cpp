@@ -4,9 +4,9 @@
 #include <vector>
 
 using namespace std;
-const int worldSize =5;
-const int initialNumberOfAnts = 3;
-const int initialNumberOfDoodleBugs = 2;
+const int worldSize =8;
+const int initialNumberOfAnts = 30;
+const int initialNumberOfDoodleBugs = 5;
 const char antsAppearance = 'o';
 const char doodleBugsAppearance = 'X';
 const char emptySpaceAppearance = '-';
@@ -191,7 +191,7 @@ void ant:: move(){
     int randomizing;
     this->lookAround();
     if (doodleWorld[getRow()][getColumn()]==doodleBugsAppearance ) {
-        kill();
+        this->kill();
         cout<<"killed ant on row "<<getRow()<<" and column "<<getColumn()<<endl;
     }
     else{
@@ -244,6 +244,7 @@ public:
     doodleBug(int row, int column);
     void breed();
     void move();
+    void starve();
 private:
     int stepsAlive;
     char appearance;
@@ -254,6 +255,9 @@ doodleBug::doodleBug(int row, int column):organism(row,column){
     stepsAlive =0;
 }
 void doodleBug:: breed(){
+
+}
+void doodleBug:: starve(){
 
 }
 void doodleBug::move(){
@@ -318,8 +322,8 @@ void displayWorld(char arr[worldSize][worldSize]);
 int main(){
     srand(time(0));
     char next='y';
-    int tempRow=0, tempColumn=0, selected_direction;
-    vector<ant> antsArray;
+    int tempRow=0, tempColumn=0, sizeCheck;
+    vector<ant> antsArray, tempAntsArray;
     vector<doodleBug> doodleBugsArray;
 
 
@@ -363,18 +367,21 @@ int main(){
         for (int i=0; i<antsArray.size();i++) {
             antsArray[i].move();
             antsArray[i].lookAround();
-
         }
 
-        for (int i=0; i<antsArray.size();i++) {
-            if (antsArray[i].lifeCheck() == false) {
-                cout << "erasing ant at row " << antsArray[i].getRow() << " and column " << antsArray[i].getColumn()<< endl;
-                antsArray.erase(antsArray.begin() + i );
-            }
+        for (int i=0; i<antsArray.size();i++){
+            if (antsArray[i].lifeCheck())
+                tempAntsArray.push_back(antsArray[i]);
         }
-        cout<<"The surviving ants are "<<endl;
-        for (int i=0; i<antsArray.size();i++)
-            cout<<i<<" - in row "<<antsArray[i].getRow()<<" and column "<<antsArray[i].getColumn()<<endl;
+        sizeCheck = antsArray.size() - tempAntsArray.size();
+        antsArray=tempAntsArray;
+        tempAntsArray.clear();
+        cout<<" erased "<<sizeCheck<<" ants."<<endl;
+
+
+        //cout<<"The surviving ants are "<<endl;
+        //for (int i=0; i<antsArray.size();i++)
+         //   cout<<i<<" - in row "<<antsArray[i].getRow()<<" and column "<<antsArray[i].getColumn()<<endl;
 
         displayWorld(doodleWorld);
         cout << "To move one step further press y" << endl;
