@@ -4,13 +4,14 @@
 #include <vector>
 
 using namespace std;
-const int worldSize =8;
-const int initialNumberOfAnts = 1;
-const int initialNumberOfDoodleBugs = 4;
+    const int worldSize =5;
+const int initialNumberOfAnts = 2;
+const int initialNumberOfDoodleBugs = 1;
 const char antsAppearance = 'o';
 const char doodleBugsAppearance = 'X';
 const char emptySpaceAppearance = '-';
 const int doodleBugStepsToStarvation = 3;
+const int antStepsToBreed =3;
 char doodleWorld[worldSize][worldSize];
 
 
@@ -27,16 +28,11 @@ public:
     char getRight() const;
     char getUp() const;
     char getDown() const;
-    void setLeft(char l);
-    void setRight(char r);
-    void setUp(char u);
-    void setDown(char d);
     void updateLeft();
     void updateRight();
     void updateUp();
     void updateDown();
     void lookAround();
-    //virtual void move() const;
 private:
     int positionRow;
     int positionColumn;
@@ -112,19 +108,6 @@ char organism:: getDown() const{
     return down;
 }
 
-void organism:: setLeft(char l){
-    this->left =l;
-}
-
-void organism:: setRight(char r){
-    this->right = r;
-}
-void organism:: setUp(char u){
-    this->up = u;
-}
-void organism:: setDown(char d){
-    this->down =d;
-}
 
 void organism::updateUp(){
     if (positionRow == 0)
@@ -173,8 +156,9 @@ void organism::lookAround(){
 class ant : public organism {
 public:
     ant(int row, int column);
-    void breed();
+    ant breed();
     void move();
+    int getStepsAlive();
 
 private:
     int stepsAlive;
@@ -184,6 +168,10 @@ ant::ant(int row, int column):organism(row,column){
     appearance = antsAppearance ;
     stepsAlive =0;
 }
+int ant::getStepsAlive() {
+    return this->stepsAlive;
+}
+
 void ant:: move(){
     srand(time(0));
     vector<char> whatsAvailable;
@@ -195,6 +183,7 @@ void ant:: move(){
         cout<<"killed ant on row "<<getRow()<<" and column "<<getColumn()<<endl;
     }
     else{
+        this->stepsAlive = this->stepsAlive +1;
         if (getRight() == emptySpaceAppearance)
             whatsAvailable.push_back('r');
         if (getLeft() == emptySpaceAppearance)
@@ -232,9 +221,44 @@ void ant:: move(){
 
 
 }
-void ant::breed(){
+ant ant::breed(){
+    this->lookAround();
+    vector<char> whereToBreed;
+    ant newAnt(this->getRow(),this->getColumn());
+    char decision='n';
+    int randomizing;
+    if (getRight() == emptySpaceAppearance)
+        whereToBreed.push_back('r');
+    if (getLeft() == emptySpaceAppearance)
+        whereToBreed.push_back('l');
+    if (getUp() == emptySpaceAppearance)
+        whereToBreed.push_back('u');
+    if (getDown() == emptySpaceAppearance)
+        whereToBreed.push_back('d');
 
+    if (!(whereToBreed.empty())) {
+        randomizing = int(rand() % whereToBreed.size());
+        decision = whereToBreed[randomizing];
 
+    }
+
+    if (decision == 'l'){
+        newAnt.setColumn(this->getColumn()-1);
+    }
+    if (decision == 'r'){
+        newAnt.setColumn(this->getColumn()+1);
+    }
+
+    if (decision == 'u'){
+        newAnt.setRow(this->getRow()-1);
+    }
+
+    if (decision == 'd'){
+        newAnt.setColumn(this->getRow()+1);
+    }
+
+    doodleWorld[newAnt.getRow()][newAnt.getColumn()] = antsAppearance;
+    return newAnt;
 }
 // ////////////////////////////////////////////////////////////////////////////
 
@@ -387,6 +411,11 @@ int main(){
             antsArray[i].move();
             antsArray[i].lookAround();
         }
+        /*/ants breed
+        for (int i=0; i<antsArray.size();i++) {
+            if (antsArray[i].getStepsAlive()% antStepsToBreed == 0)
+                antsArray.push_back(antsArray[i].breed());
+        }*/
         // updating vector of surviving and new ants
         for (int i=0; i<antsArray.size();i++){
             if (antsArray[i].lifeCheck())
