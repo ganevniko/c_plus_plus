@@ -4,13 +4,13 @@
 #include <vector>
 
 using namespace std;
-const int worldSize =5;
-const int initialNumberOfAnts = 0;
-const int initialNumberOfDoodleBugs = 1;
+const int worldSize =20;
+const int initialNumberOfAnts = 100;
+const int initialNumberOfDoodleBugs = 5;
 const char antsAppearance = 'o';
 const char doodleBugsAppearance = 'X';
 const char emptySpaceAppearance = '-';
-const int doodleBugStepsToStarvation = 10;
+const int doodleBugStepsToStarvation = 3;
 const int antStepsToBreed =3;
 const int bugStepsToBreed =8;
 char doodleWorld[worldSize][worldSize];
@@ -188,7 +188,6 @@ void ant:: move(){
     this->lookAround();
     if (doodleWorld[getRow()][getColumn()]==doodleBugsAppearance ) {
         this->kill();
-        cout<<"killed ant on row "<<getRow()<<" and column "<<getColumn()<<endl;
     }
     else{
         this->setStepsAlive(this->getStepsAlive() +1) ;
@@ -224,7 +223,9 @@ void ant:: move(){
             this->setColumn(getColumn() + 1);
             doodleWorld[getRow()][getColumn()] = antsAppearance;
         }
+        //cout<<"moved to row "<<getRow()<<" and column "<<getColumn()<<endl;
     }
+
 
 
 
@@ -264,8 +265,11 @@ ant ant::breed(){
     if (decision == 'd'){
         newAnt.setColumn(this->getRow()+1);
     }
-
+    /*cout<<"Ant breeding to row "<<getRow()<<" and column "<<getColumn();
+    cout<<" on my left is "<<getLeft()<<", on my right is "<<getRight();
+    cout<<" on my up is "<<getUp()<<", on my down is "<<getDown()<<endl;*/
     doodleWorld[newAnt.getRow()][newAnt.getColumn()] = antsAppearance;
+    newAnt.lookAround();
     return newAnt;
 }
 // ////////////////////////////////////////////////////////////////////////////
@@ -400,8 +404,8 @@ void doodleBug::move(){
 
     if (this-> getStarving() >= doodleBugStepsToStarvation) {
         kill();
+        //cout<<"Killed!"<<endl;
         doodleWorld[this->getRow()][this->getColumn()] = emptySpaceAppearance;
-        cout<<"Killed"<<endl;
     }
 
 }
@@ -454,13 +458,12 @@ int main(){
             doodleBugsArray[i].move();
             doodleBugsArray[i].lookAround();
         }
+
         //Bugs breeding
         tempBugsArrSize = doodleBugsArray.size();
         for (int i=0; i<tempBugsArrSize;i++) {
-            cout<<"Bug "<<i<<" steps alive are "<<doodleBugsArray[i].getStepsAlive()<<endl;
             if (doodleBugsArray[i].getStepsAlive() % bugStepsToBreed == 0) {
                 doodleBugsArray.push_back(doodleBugsArray[i].breed());
-                cout << "Bug " << i << " is breeding!" << endl;
             }
         }
 
@@ -469,14 +472,20 @@ int main(){
             antsArray[i].move();
             antsArray[i].lookAround();
         }
+        // updating vector of surviving ants
+        for (int i=0; i<antsArray.size();i++){
+            if (antsArray[i].lifeCheck())
+                tempAntsArray.push_back(antsArray[i]);
+        }
+        antsArray=tempAntsArray;
+        tempAntsArray.clear();
         //ants breeding
         tempAntsArrSize = antsArray.size();
         for (int i=0; i<tempAntsArrSize;i++) {
-            cout<<"Ant "<<i<<" steps alive are "<<antsArray[i].getStepsAlive()<<endl;
             if (antsArray[i].getStepsAlive()% antStepsToBreed == 0)
                 antsArray.push_back(antsArray[i].breed());
         }
-        // updating vector of surviving and new ants
+        // updating vector for new ants
         for (int i=0; i<antsArray.size();i++){
             if (antsArray[i].lifeCheck())
                 tempAntsArray.push_back(antsArray[i]);
@@ -492,6 +501,13 @@ int main(){
         }
         doodleBugsArray=tempDoodleBugArray;
         tempDoodleBugArray.clear();
+
+        /*for (int i=0; i <doodleBugsArray.size();i++){
+            cout<<"Doodlebug "<<i+1<<" is in row "<<doodleBugsArray[i].getRow()<<" and column "<<doodleBugsArray[i].getColumn()<<endl;
+        }
+        for (int i=0; i <antsArray.size();i++){
+            cout<<"Ant "<<i+1<<" is in row "<<antsArray[i].getRow()<<" and column "<<antsArray[i].getColumn()<<endl;
+        }*/
 
 
 
