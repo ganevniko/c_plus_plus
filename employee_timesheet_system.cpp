@@ -131,7 +131,7 @@ int main(){
     finEmployees.open(employeeFile);
     if (finEmployees.fail()){
         cout << "Error opening file"<<endl;
-        return 0;
+        exit(1);
     }
 
     while(finEmployees >> id >> rate >> firstName){
@@ -156,7 +156,7 @@ int main(){
     finTimeSheets.open(timeSheetFile);
     if (finTimeSheets.fail()){
         cout << "Error opening file"<<endl;
-        return 0;
+        exit(1);
     }
 
     while(finTimeSheets >> ids[count] >> hours[count])
@@ -185,7 +185,7 @@ int main(){
         nod= nod->next;
     }
     finTimeSheets.close();
-    
+
     cout << "************ Payroll Information ************"<<endl;
     for (int i=0;i<employeesCount;i++){
         cout<<fullNames[i]<<" $"<<totalEarnings[i]<<endl;
