@@ -2,7 +2,6 @@
 #include<iostream>
 #include<string>
 #include<cstdlib>
-#include<vector>
 using namespace std;
 const double MINIMUM_WAGE= 7.50;
 class employee{
