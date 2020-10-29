@@ -108,11 +108,16 @@ void LinkedList::addNode(string Name,int id, double rate){
         nod->prev = p;
     }
 }
+
+
+
+
+
 int main(){
 
 
     ifstream finEmployees, finTimeSheets;
-    int id, count=0;
+    int id, count=0, employeesCount =0;
     int hours[100], ids[100];
     char employeeFile[100], timeSheetFile[100];
     string firstName, lastName, middleInitial;
@@ -138,11 +143,13 @@ int main(){
             finEmployees >> lastName;
             string name = firstName + " "+ middleInitial+ " " + lastName;
             list.addNode(name, id,rate);
+            employeesCount++;
         }
         else {
             lastName=temp;
             string name = firstName + " " + lastName;
             list.addNode(name, id,rate);
+            employeesCount++;
         }
 
     }
@@ -156,7 +163,8 @@ int main(){
     while(finTimeSheets >> ids[count] >> hours[count])
         count++;
     NodePtr nod = list.getHead();
-    cout << "************ Payroll Information ************"<<endl;
+    string fullNames[employeesCount];
+    double totalEarnings[employeesCount];
     while(nod!= nullptr){
         double earnings = 0;
         for (int i = 0; i<count; i++){
@@ -164,10 +172,28 @@ int main(){
                 earnings = earnings + nod->data->getHourlyRate() * hours[i];
             }
         }
-        cout << nod->data->getName() << " $" << earnings << endl;
+        int i=0;
+        while (totalEarnings[i]>=earnings)
+            i++;
+        if (i!=employeesCount-1) {
+            for (int j = employeesCount - 2; j >= i; j--) {
+                totalEarnings[j+1]=totalEarnings[j];
+                fullNames[j+1]=fullNames[j];
+            }
+        }
+        totalEarnings[i]=earnings;
+        fullNames[i]=nod->data->getName();
         nod= nod->next;
     }
-    cout<< "**************** End Payroll ****************"<<endl;
     finTimeSheets.close();
+    
+    cout << "************ Payroll Information ************"<<endl;
+    for (int i=0;i<employeesCount;i++){
+        cout<<fullNames[i]<<" $"<<totalEarnings[i]<<endl;
+    }
+    cout<< "**************** End Payroll ****************"<<endl;
     return 0;
 }
+
+
+
