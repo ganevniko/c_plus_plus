@@ -3,7 +3,7 @@
 #include<string>
 #include<cstdlib>
 using namespace std;
-const double MINIMUM_WAGE= 7.50;
+const double MINIMUM_WAGE= 15;
 class employee{
 public:
     employee();
