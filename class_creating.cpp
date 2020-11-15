@@ -52,7 +52,7 @@ Money:: Money (long dollars, int cents){
     }
     all_cents = dollars*100+cents;
 }
-//Initialize with dollars only
+//Initialize only with dollars
 Money:: Money (long dollars): all_cents(dollars*100){
     //blank
     }
