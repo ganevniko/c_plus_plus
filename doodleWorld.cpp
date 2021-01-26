@@ -5,7 +5,7 @@
 
 using namespace std;
 const int worldSize =20;
-const int initialNumberOfAnts = 80;
+const int initialNumberOfAnts = 100;
 const int initialNumberOfDoodleBugs = 5;
 const char antsAppearance = 'o';
 const char doodleBugsAppearance = 'X';
